@@ -46,7 +46,7 @@
             </div>
             <div>
               <h3>Real difficulty levels</h3>
-              <p>Daily, Business, and Advanced Enterprise scenarios with different complexity.</p>
+              <p>Levels 1-5 scenarios from daily syncs to executive delivery reviews.</p>
             </div>
             <div>
               <h3>Progress you can trust</h3>
@@ -57,7 +57,13 @@
         <div class="hero__visual" aria-hidden="true">
           <div class="hero__panel">
             <span>Stakeholder Alignment</span>
-            <h2>We need a clear owner for the escalation path.</h2>
+            <h2 id="hero-sentence">We need a clear owner for the escalation path.</h2>
+            <div class="tts-row">
+              <button class="tts-button" id="hero-tts" type="button" aria-label="Play audio">
+                👂
+              </button>
+              <span>Play recommended sentence</span>
+            </div>
             <p>エスカレーションの責任者を明確にする必要があります。</p>
           </div>
           <div class="hero__grid"></div>
@@ -75,15 +81,17 @@
             </p>
           </div>
           <div class="level-switch" id="level-switch">
-            <button class="pill active" data-level="daily">Level 1: Daily</button>
-            <button class="pill" data-level="business">Level 2: Business</button>
-            <button class="pill" data-level="enterprise">Level 3: Enterprise & IT</button>
+            <button class="pill" data-level="1">Level 1</button>
+            <button class="pill active" data-level="2">Level 2</button>
+            <button class="pill" data-level="3">Level 3</button>
+            <button class="pill" data-level="4">Level 4</button>
+            <button class="pill" data-level="5">Level 5</button>
           </div>
         </div>
 
         <div class="flashcard" id="flashcard">
           <div class="flashcard__meta">
-            <span class="tag" id="card-level">Daily</span>
+            <span class="tag" id="card-level">Level 2</span>
             <span class="context" id="card-context">Context</span>
             <button class="favorite" id="favorite-toggle" type="button">☆ お気に入り</button>
           </div>
@@ -91,7 +99,18 @@
             <p class="flashcard__jp" id="card-jp"></p>
             <div class="flashcard__answer hidden" id="card-answer" aria-hidden="true">
               <p class="flashcard__label">English</p>
-              <p class="flashcard__en" id="card-en"></p>
+              <div class="flashcard__en-row">
+                <p class="flashcard__en" id="card-en"></p>
+                <button
+                  class="tts-button"
+                  id="flashcard-tts"
+                  type="button"
+                  aria-label="Play audio"
+                  disabled
+                >
+                  👂
+                </button>
+              </div>
             </div>
           </div>
           <div class="flashcard__actions">
@@ -121,21 +140,40 @@
             </div>
           </div>
         </div>
+        <div class="favorites" id="favorites">
+          <div class="favorites__header">
+            <div>
+              <p class="section__eyebrow">Favorites</p>
+              <h3>Saved sentences</h3>
+              <p class="favorites__subtext">Quick access to your starred cards.</p>
+            </div>
+            <span class="favorites__count" id="favorites-count">0</span>
+          </div>
+          <div class="favorites__list" id="favorites-list"></div>
+          <p class="favorites__empty" id="favorites-empty">No favorites yet.</p>
+        </div>
       </section>
 
       <section class="section" id="quiz">
         <div class="section__header">
           <div>
             <p class="section__eyebrow">Quiz</p>
-            <h2>60-second decision test</h2>
-            <p>Measure accuracy under time pressure. No automatic restarts.</p>
+            <h2>Decision test</h2>
+            <p>Choose between a 60-second sprint or a focused 10-question round.</p>
           </div>
           <div class="quiz__controls">
+            <label for="quiz-type">Quiz Type</label>
+            <select id="quiz-type">
+              <option value="timed">60 seconds</option>
+              <option value="ten">10 questions</option>
+            </select>
             <label for="quiz-level">Difficulty</label>
             <select id="quiz-level">
-              <option value="daily">Level 1: Daily</option>
-              <option value="business">Level 2: Business</option>
-              <option value="enterprise">Level 3: Enterprise & IT</option>
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
+              <option value="5">Level 5</option>
             </select>
             <button class="primary" id="start-quiz">Start Quiz</button>
           </div>
@@ -144,7 +182,7 @@
         <div class="quiz" id="quiz-area">
           <div class="quiz__meta">
             <div>
-              <p class="stats__label">Time</p>
+              <p class="stats__label" id="quiz-timer-label">Time</p>
               <p class="stats__value" id="quiz-timer">60</p>
             </div>
             <div>
@@ -159,6 +197,18 @@
           <div class="quiz__prompt">
             <p class="quiz__label">Japanese</p>
             <h3 id="quiz-question">Start the quiz to begin.</h3>
+            <div class="tts-row">
+              <button
+                class="tts-button"
+                id="quiz-tts"
+                type="button"
+                aria-label="Play audio"
+                disabled
+              >
+                👂
+              </button>
+              <span>Play English prompt</span>
+            </div>
           </div>
           <div class="quiz__options" id="quiz-options"></div>
         </div>
@@ -176,6 +226,17 @@
             <button class="primary" id="retry-quiz">Retry</button>
             <button class="ghost" data-jump="home">Back to Home</button>
           </div>
+        </div>
+        <div class="quiz__history">
+          <div class="quiz__history-header">
+            <h4>Quiz History (latest 10)</h4>
+            <div class="quiz__history-actions">
+              <button class="ghost" id="quiz-history-prev" type="button">Prev</button>
+              <button class="ghost" id="quiz-history-next" type="button">Next</button>
+            </div>
+          </div>
+          <ul class="quiz__history-list" id="quiz-history-list"></ul>
+          <p class="quiz__history-empty" id="quiz-history-empty">No quiz history yet.</p>
         </div>
       </section>
 
@@ -245,6 +306,40 @@
             <input type="checkbox" id="reminder-opt" />
             Show daily reminder on the home screen
           </label>
+          <label>
+            Default Level
+            <select id="default-level">
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
+              <option value="5">Level 5</option>
+            </select>
+          </label>
+          <label>
+            Category Filter
+            <select id="category-filter"></select>
+          </label>
+          <label>
+            TTS Rate
+            <select id="tts-rate">
+              <option value="0.8">0.8x</option>
+              <option value="1">1.0x</option>
+              <option value="1.2">1.2x</option>
+            </select>
+          </label>
+          <label>
+            TTS Accent
+            <select id="tts-lang">
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+            </select>
+          </label>
+          <label>
+            TTS Voice
+            <select id="tts-voice"></select>
+          </label>
+          <p class="settings__hint" id="tts-warning"></p>
           <button class="primary" type="submit">Save Settings</button>
           <p class="settings__status" id="settings-status">Settings are up to date.</p>
         </form>
